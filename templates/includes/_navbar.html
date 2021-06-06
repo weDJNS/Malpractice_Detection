@@ -1,0 +1,123 @@
+<style>
+</style>
+<script src="{{ url_for('static', filename='volt/vendor/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+<header class="header-global">
+   <nav id="navbar-main" class="navbar navbar-main navbar-expand-lg navbar-theme-primary bg-light fixed-top"> 
+<div class="container">
+  
+  {% if session["logged_in"]!=True %}
+    <a class="navbar-brand" href="/"><span style="font-size:22px;"><center><span style="font-weight: 800">AI.</span><span style="font-size: 20px;color: #6a1b9a;" class=" deep-purple lighten-5">EXAM</span></center></span></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon">   
+        <i class="fas fa-bars" style="color:#1c2540; font-size:28px;"></i>
+    </span>
+    </button>
+  {% endif %}
+   <div class="collapse navbar-collapse" id="navbarSupportedContent">
+     <ul class="nav navbar-nav ml-auto">
+    {% if session.logged_in %}
+      {% if session.user_role == "student" %}
+      <li class="nav-item mr-6">
+        <a class="navbar-brand" href="/student_index" style="position:relative;right:200%;"><span style="font-size:22px;"><center><span style="font-weight: 800">AI.</span><span style="font-size: 20px;color: #6a1b9a;" class=" deep-purple lighten-5">EXAM</span></center></span></a>
+      </li>
+      <li class="nav-item dropdown">
+          <a class="btn dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Welcome, 
+            <span style="font-size: 15px;color: #6a1b9a;" class=" deep-purple lighten-5">{{session.name}} </span> 
+            <span class="fas fa-sort-down"></span>
+          </a>
+        
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" href="/changepassword_student">Change Password</a>
+            <a class="dropdown-item" href="#" onclick="return funLogout()">Logout</a>
+          </div>
+      </li>
+      {% endif %}
+      {% if session.user_role == "teacher" %}
+      <li class="nav-item mr-6">
+        <a class="navbar-brand" href="/professor_index" style="position:relative;right:100%;"><span style="font-size:22px;"><center><span style="font-weight: 800">AI.</span><span style="font-size: 20px;color: #6a1b9a;" class=" deep-purple lighten-5">EXAM</span></center></span></a>
+      </li>
+      <li class="nav-item dropdown">
+          <a class="btn dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Welcome, 
+            <span style="font-size: 15px;color: #6a1b9a;" class=" deep-purple lighten-5">{{session.name}} </span> 
+            <span class="fas fa-sort-down"></span>
+          </a>
+        
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" href="/changepassword_professor">Change Password</a>
+            <a class="dropdown-item" href="#" onclick="return funLogout()">Logout</a>
+          </div>
+      </li>
+      {% endif %}
+      <!-- <li class="nav-item ">
+        <a class="nav-link" id="active1" href="/professor_index"><span class="fas fa-columns" ><span style="font-family: 'Nunito Sans';color: #6a1b9a;"> Dashboard</span></span></a></li>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="active2" href="/changepassword_professor"><span class="fas fa-key" ><span style="font-family: 'Nunito Sans';color: #6a1b9a;"> Change Password</span></span></a></li>
+      </li> -->
+      
+          <!-- <li class="nav-item">
+            <a class="nav-link" id="active4" href ="#" onclick="return funLogout()" class="btn btn-secondary text-dark btn-xs"><span class="fas fa-sign-out-alt" ><span style="font-family: 'Nunito Sans';color: #6a1b9a;"> Logout</span></span></a></li> -->
+    {% else %}
+    <li class="nav-item ">
+      <a class="nav-link" id="active6"  href="/login"><span class="fas fa-sign-in-alt"><span style="font-family: 'Nunito Sans';color: #6a1b9a;"> Login</span></span></a></li>
+    </li>
+      <li class="nav-item">
+        <a class="nav-link" id="active5" href="/register"><span class="fas fa-user-plus" ><span style="font-family: 'Nunito Sans';color: #6a1b9a;"> Register</span></span></a></li>
+      </li> 
+ {% endif %}
+	  </ul>
+	</div>
+	</div>
+</nav>
+</header>
+<script>
+   function funLogout () {
+swal.fire({
+  title: 'Are you sure?',
+  text: "Do you really want to logout?",
+  icon: 'warning',
+  showCancelButton: true,
+  confirmButtonText: 'Yes, Logout me!',
+  cancelButtonText: 'No!',
+  confirmButtonColor: '#d33',
+  cancelButtonColor: '#202124',
+  reverseButtons: true
+}).then((result) => {
+  if (result.isConfirmed) {
+              $.ajax({
+                    type: "POST",
+                    url: "/logout",
+                    success: function(response){
+                      if(response=="success")
+                      {
+                      console.log(response);
+    window.location.href = "/";
+                      }
+}
+                });  
+      swal.fire(
+      'Success!',
+      'You are successfully has been sign out from the system.',
+      'success'
+    )
+  } else if (
+    result.dismiss === Swal.DismissReason.cancel
+  ) {
+    swal.fire(
+      'Cancelled',
+      'Logout cancelled.',
+      'error'
+    )
+  }
+})
+}
+
+$(".dropdown").hover(function(){
+  $(this).addClass('show')
+},function(){
+  $(this).removeClass('show')
+})
+</script>
